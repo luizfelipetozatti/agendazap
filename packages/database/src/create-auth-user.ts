@@ -1,6 +1,6 @@
-import { getSupabaseAdmin } from "./supabase";
+import { createSupabaseAdmin } from "./supabase";
 
-const supabase = getSupabaseAdmin();
+const supabase = createSupabaseAdmin();
 
 async function createAuthUser() {
   console.log("🔐 Creating auth user...");

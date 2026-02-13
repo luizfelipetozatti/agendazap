@@ -1,0 +1,3 @@
+echo "🔍 Running type-check..."
+pnpm type-check
+echo "✅ Pre-commit checks passed!"
