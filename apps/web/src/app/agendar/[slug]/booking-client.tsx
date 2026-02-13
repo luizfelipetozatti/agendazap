@@ -35,6 +35,7 @@ interface BookingPageClientProps {
     id: string;
     name: string;
     slug: string;
+    timezone: string;
   };
   services: ServiceData[];
 }
