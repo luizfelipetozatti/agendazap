@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma, UserRole } from "@agendazap/database";
+import { prisma } from "@agendazap/database";
+import { UserRole } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {

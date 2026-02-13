@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { prisma, Service } from "@agendazap/database";
+import { prisma } from "@agendazap/database";
+import type { Service } from "@prisma/client";
 import { Calendar } from "lucide-react";
 
 import { BookingPageClient } from "./booking-client";
