@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
       const slotEnd = addMinutes(slotStart, durationMinutes);
 
       return !existingBookings.some(
-        (b) => slotStart < b.endTime && slotEnd > b.startTime
+        (b: { startTime: Date; endTime: Date }) => slotStart < b.endTime && slotEnd > b.startTime
       );
     });
 
