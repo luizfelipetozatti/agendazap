@@ -66,7 +66,7 @@ export default async function BookingsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y">
-                  {bookings.map((booking) => {
+                  {bookings.map((booking: typeof bookings[number]) => {
                     const status = statusConfig[booking.status];
                     return (
                       <tr key={booking.id} className="hover:bg-muted/50">
