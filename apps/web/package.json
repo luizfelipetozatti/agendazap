@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "postinstall": "prisma generate"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@agendazap/database": "workspace:*",
@@ -36,8 +35,6 @@
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.4.0",
-    "@prisma/client": "^5.22.0",
-    "prisma": "^5.22.0"
+    "typescript": "^5.4.0"
   }
 }
