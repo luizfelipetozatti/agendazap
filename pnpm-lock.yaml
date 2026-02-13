@@ -152,6 +152,9 @@ importers:
       '@agendazap/typescript-config':
         specifier: workspace:*
         version: link:../config/typescript
+      '@types/node':
+        specifier: ^20.12.7
+        version: 20.19.33
       prisma:
         specifier: ^5.22.0
         version: 5.22.0
