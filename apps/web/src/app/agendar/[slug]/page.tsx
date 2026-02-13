@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@agendazap/database";
+import { prisma, Service } from "@agendazap/database";
 import { Calendar } from "lucide-react";
 
 import { BookingPageClient } from "./booking-client";
@@ -59,7 +59,7 @@ export default async function BookingPage({ params }: BookingPageProps) {
             name: org.name,
             slug: org.slug,
           }}
-          services={org.services.map((s) => ({
+          services={org.services.map((s: Service) => ({
             id: s.id,
             name: s.name,
             description: s.description,
