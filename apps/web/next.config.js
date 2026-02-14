@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   transpilePackages: ["@agendazap/ui", "@agendazap/database"],
   images: {
     remotePatterns: [

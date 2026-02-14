@@ -1,4 +1,4 @@
 #!/bin/sh
 echo "🔍 Running type-check on web app..."
-cd apps/web && npx tsc --noEmit
+cd apps/web && pnpm type-check
 echo "✅ Pre-commit checks passed!"
