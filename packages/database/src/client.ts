@@ -17,16 +17,5 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-// Re-export all Prisma types
+// Re-export all Prisma types and values (including enums)
 export * from "@prisma/client";
-
-// Export commonly used types explicitly for better IDE support
-export type {
-  Service,
-  User,
-  Organization,
-  Booking,
-  OrganizationMember,
-  UserRole,
-  BookingStatus,
-} from "@prisma/client";
