@@ -8,6 +8,7 @@ import {
 
 // Force dynamic rendering (no static generation at build time)
 export const dynamic = 'force-dynamic';
+import { startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns";
 import {
   Calendar,
   CheckCircle,
@@ -16,7 +17,6 @@ import {
   TrendingUp,
   DollarSign,
 } from "lucide-react";
-import { startOfDay, endOfDay, startOfMonth, endOfMonth } from "date-fns";
 
 // TODO: Pegar org_id do usuário logado via session
 // Por enquanto, busca a primeira org para demo

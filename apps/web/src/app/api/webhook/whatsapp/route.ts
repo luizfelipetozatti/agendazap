@@ -3,8 +3,8 @@
 // Recebe eventos de mensagens e status updates
 // ============================================================
 
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@agendazap/database";
+import { NextRequest, NextResponse } from "next/server";
 
 interface EvolutionWebhookPayload {
   event: string;

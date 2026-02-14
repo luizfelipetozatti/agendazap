@@ -1,9 +1,10 @@
 "use client";
 
+import { Button } from "@agendazap/ui";
+import { Check, X, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Check, X, CheckCircle } from "lucide-react";
-import { Button } from "@agendazap/ui";
+
 import { updateBookingStatusAction } from "@/app/actions/booking";
 
 interface BookingStatusActionsProps {

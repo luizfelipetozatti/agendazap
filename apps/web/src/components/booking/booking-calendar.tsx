@@ -5,7 +5,8 @@
 // Usa date-fns para manipulação de datas
 // ============================================================
 
-import { useState, useMemo } from "react";
+import { cn } from "@agendazap/ui";
+import { Button } from "@agendazap/ui";
 import {
   format,
   startOfMonth,
@@ -23,8 +24,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@agendazap/ui";
-import { Button } from "@agendazap/ui";
+import { useState, useMemo } from "react";
 
 interface BookingCalendarProps {
   /** Horários disponíveis no formato ISO para o dia selecionado */

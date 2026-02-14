@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Button } from "@agendazap/ui";
 import {
   Calendar,
   LayoutDashboard,
@@ -9,7 +8,9 @@ import {
   LogOut,
   MessageCircle,
 } from "lucide-react";
-import { Button } from "@agendazap/ui";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({

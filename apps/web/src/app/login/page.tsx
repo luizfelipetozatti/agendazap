@@ -1,10 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { toast } from "sonner";
-import { Calendar } from "lucide-react";
 import {
   Button,
   Input,
@@ -16,6 +11,12 @@ import {
   CardContent,
   CardFooter,
 } from "@agendazap/ui";
+import { Calendar } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {

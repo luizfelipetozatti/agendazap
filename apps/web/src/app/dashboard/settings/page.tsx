@@ -1,3 +1,4 @@
+import { prisma } from "@agendazap/database";
 import {
   Card,
   CardHeader,
@@ -8,7 +9,6 @@ import {
   Label,
   Button,
 } from "@agendazap/ui";
-import { prisma } from "@agendazap/database";
 
 // Force dynamic rendering (no static generation at build time)
 export const dynamic = 'force-dynamic';

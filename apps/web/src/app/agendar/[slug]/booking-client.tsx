@@ -5,10 +5,6 @@
 // Fluxo: Selecionar Serviço → Escolher Horário → Preencher Dados
 // ============================================================
 
-import { useState, useCallback } from "react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { ArrowLeft, Check, Clock, DollarSign } from "lucide-react";
 import {
   Button,
   Card,
@@ -17,10 +13,14 @@ import {
   CardDescription,
   CardContent,
 } from "@agendazap/ui";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { ArrowLeft, Check, Clock, DollarSign } from "lucide-react";
+import { useState, useCallback } from "react";
 
+import { getAvailableSlotsAction } from "@/app/actions/booking";
 import { BookingCalendar } from "@/components/booking/booking-calendar";
 import { BookingForm } from "@/components/booking/booking-form";
-import { getAvailableSlotsAction } from "@/app/actions/booking";
 
 interface ServiceData {
   id: string;

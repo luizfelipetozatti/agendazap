@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
 import { prisma } from "@agendazap/database";
 import { Calendar } from "lucide-react";
+import { notFound } from "next/navigation";
 
 import { BookingPageClient } from "./booking-client";
 

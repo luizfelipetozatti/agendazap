@@ -4,11 +4,6 @@
 // AgendaZap - Formulário de Booking
 // ============================================================
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { MessageCircle, User, Phone, Mail, FileText } from "lucide-react";
 import {
   Button,
   Input,
@@ -20,9 +15,14 @@ import {
   CardContent,
   CardFooter,
 } from "@agendazap/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MessageCircle, User, Phone, Mail, FileText } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-import { createBookingSchema, type CreateBookingInput } from "@/lib/validations";
 import { createBookingAction } from "@/app/actions/booking";
+import { createBookingSchema, type CreateBookingInput } from "@/lib/validations";
 
 interface BookingFormProps {
   organizationId: string;

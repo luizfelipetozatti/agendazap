@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Button } from "@agendazap/ui";
 import { Calendar, MessageCircle, Building2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
