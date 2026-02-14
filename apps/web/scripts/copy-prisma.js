@@ -1,15 +1,40 @@
 const fs = require("fs");
 const path = require("path");
+const { spawnSync } = require("child_process");
 
 // App root: one level above this scripts folder
 const appRoot = path.resolve(__dirname, "..");
 
 // Candidate sources where Prisma Client may be generated
-const sources = [
-  path.resolve(appRoot, "node_modules/.prisma"),
-  path.resolve(appRoot, "../database/node_modules/.prisma"),
-  path.resolve(appRoot, "../../node_modules/.prisma"),
-];
+function listCandidateSources() {
+  const candidates = [
+    path.resolve(appRoot, "node_modules/.prisma"),
+    path.resolve(appRoot, "../database/node_modules/.prisma"),
+    path.resolve(appRoot, "../../node_modules/.prisma"),
+  ];
+
+  // Scan pnpm virtual store for Prisma client outputs
+  const pnpmStores = [
+    path.resolve(appRoot, "../../node_modules/.pnpm"),
+    path.resolve(appRoot, "../database/node_modules/.pnpm"),
+  ];
+
+  for (const store of pnpmStores) {
+    if (!fs.existsSync(store)) continue;
+    const entries = fs.readdirSync(store, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (
+        entry.name.startsWith("@prisma+client@") ||
+        entry.name.startsWith("@agendazap+database@")
+      ) {
+        candidates.push(path.join(store, entry.name, "node_modules/.prisma"));
+      }
+    }
+  }
+
+  return candidates;
+}
 
 // Destinations needed for Next.js standalone/server output on Vercel
 const destinations = [
@@ -35,9 +60,30 @@ function copyIfExists(src, dest) {
 
 (function main() {
   let copied = 0;
-  for (const src of sources) {
-    for (const dest of destinations) {
-      if (copyIfExists(src, dest)) copied += 1;
+
+  function attemptCopy() {
+    for (const src of listCandidateSources()) {
+      for (const dest of destinations) {
+        if (copyIfExists(src, dest)) copied += 1;
+      }
+    }
+  }
+
+  attemptCopy();
+
+  if (copied === 0) {
+    console.warn("[copy-prisma] No .prisma found, running prisma generate...");
+    const root = path.resolve(appRoot, "..", "..");
+    const result = spawnSync(
+      "pnpm",
+      ["--filter", "@agendazap/database", "prisma", "generate", "--schema=./prisma/schema.prisma"],
+      { cwd: root, stdio: "inherit", shell: process.platform === "win32" }
+    );
+
+    if (result.status !== 0) {
+      console.warn("[copy-prisma] prisma generate failed; proceeding without copy");
+    } else {
+      attemptCopy();
     }
   }
 
