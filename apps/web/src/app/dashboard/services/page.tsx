@@ -1,5 +1,9 @@
 import { prisma } from "@agendazap/database";
 import { format } from "date-fns";
+
+// Force dynamic rendering (no static generation at build time)
+export const dynamic = 'force-dynamic';
+
 import {
   Card,
   CardHeader,

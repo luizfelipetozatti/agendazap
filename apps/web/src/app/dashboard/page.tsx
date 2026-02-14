@@ -5,6 +5,9 @@ import {
   CardTitle,
   CardContent,
 } from "@agendazap/ui";
+
+// Force dynamic rendering (no static generation at build time)
+export const dynamic = 'force-dynamic';
 import {
   Calendar,
   CheckCircle,

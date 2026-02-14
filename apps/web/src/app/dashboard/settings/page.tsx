@@ -10,6 +10,9 @@ import {
 } from "@agendazap/ui";
 import { prisma } from "@agendazap/database";
 
+// Force dynamic rendering (no static generation at build time)
+export const dynamic = 'force-dynamic';
+
 // TODO: Pegar org_id da session
 async function getOrg() {
   return prisma.organization.findFirst();

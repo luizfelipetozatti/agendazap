@@ -1,6 +1,9 @@
 import { prisma, BookingStatus } from "@agendazap/database";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
+// Force dynamic rendering (no static generation at build time)
+export const dynamic = 'force-dynamic';
 import {
   Card,
   CardHeader,
