@@ -82,7 +82,7 @@ export default async function DashboardPage() {
   ]);
 
   const revenue = totalRevenue.reduce(
-    (acc: number, b: typeof totalRevenue[number]) => acc + Number(b.service.price),
+    (acc, b) => acc + Number(b.service.price),
     0
   );
   const revenueFormatted = new Intl.NumberFormat("pt-BR", {
