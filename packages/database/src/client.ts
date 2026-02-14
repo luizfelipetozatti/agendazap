@@ -17,5 +17,8 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-// Re-export all Prisma types and values (including enums)
-export * from "@prisma/client";
+// Re-export Prisma enums explicitly (tsup may not handle `export *` for enums)
+export { UserRole, BookingStatus } from "@prisma/client";
+
+// Re-export all Prisma types
+export type { Prisma, User, Organization, OrganizationMember, Service, Booking } from "@prisma/client";
