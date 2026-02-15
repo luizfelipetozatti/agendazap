@@ -12,6 +12,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/app/actions/auth";
 
 export default async function DashboardLayout({
   children,
@@ -68,7 +69,7 @@ export default async function DashboardLayout({
                   {user.email}
                 </p>
               </div>
-              <form action="/api/auth/signout" method="POST">
+              <form action={signOut}>
                 <Button variant="ghost" size="icon" type="submit">
                   <LogOut className="h-4 w-4" />
                 </Button>
