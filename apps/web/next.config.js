@@ -1,4 +1,5 @@
 const isVercel = process.env.VERCEL === "1";
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -9,10 +10,26 @@ const nextConfig = {
     // Only include Prisma engines in output tracing on Vercel to avoid Windows FS issues locally
     outputFileTracingIncludes: isVercel
       ? {
-          "/**/*": [
-            "./node_modules/.prisma/**", // app-local (when generated in this package)
-            "../packages/database/node_modules/.prisma/**", // workspace package location
-            "../../node_modules/.prisma/**", // root node_modules (pnpm hoisted)
+          "/api/**/*": [
+            "./node_modules/.prisma/client/**",
+            "../../packages/database/node_modules/.prisma/client/**",
+            "../../node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/prisma@*/node_modules/.prisma/client/**",
+          ],
+          "/dashboard/**/*": [
+            "./node_modules/.prisma/client/**",
+            "../../packages/database/node_modules/.prisma/client/**",
+            "../../node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/prisma@*/node_modules/.prisma/client/**",
+          ],
+          "/agendar/**/*": [
+            "./node_modules/.prisma/client/**",
+            "../../packages/database/node_modules/.prisma/client/**",
+            "../../node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/**",
+            "../../node_modules/.pnpm/prisma@*/node_modules/.prisma/client/**",
           ],
         }
       : undefined,
