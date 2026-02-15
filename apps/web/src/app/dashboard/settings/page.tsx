@@ -9,17 +9,17 @@ import {
   Label,
   Button,
 } from "@agendazap/ui";
+import { getCurrentUserOrgId } from "@/lib/auth/dashboard";
 
 // Force dynamic rendering (no static generation at build time)
 export const dynamic = 'force-dynamic';
 
-// TODO: Pegar org_id da session
-async function getOrg() {
-  return prisma.organization.findFirst();
-}
-
 export default async function SettingsPage() {
-  const org = await getOrg();
+  const orgId = await getCurrentUserOrgId();
+  
+  const org = await prisma.organization.findUnique({
+    where: { id: orgId }
+  });
 
   return (
     <div className="space-y-6">

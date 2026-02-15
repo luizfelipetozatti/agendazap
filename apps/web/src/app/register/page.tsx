@@ -43,7 +43,18 @@ export default function RegisterPage() {
     });
 
     if (error) {
-      toast.error("Erro ao criar conta", { description: error.message });
+      // Tratamento específico para rate limit de email
+      if (error.message.includes("email rate limit exceeded")) {
+        toast.error("Limite de emails atingido", { 
+          description: "Tente novamente em alguns minutos ou contate o suporte." 
+        });
+      } else if (error.message.includes("User already registered")) {
+        toast.error("Email já cadastrado", { 
+          description: "Tente fazer login ou usar um email diferente." 
+        });
+      } else {
+        toast.error("Erro ao criar conta", { description: error.message });
+      }
       setIsLoading(false);
       return;
     }
@@ -63,14 +74,27 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         toast.error("Conta criada, mas erro ao configurar organização");
+        setIsLoading(false);
+        return;
       }
     }
 
-    toast.success("Conta criada com sucesso!", {
-      description: "Verifique seu email para confirmar.",
-    });
+    // Verificar se email confirmação está habilitada
+    const needsConfirmation = !data.session && data.user && !data.user.email_confirmed_at;
+    
+    if (needsConfirmation) {
+      toast.success("Conta criada com sucesso!", {
+        description: "Verifique seu email para confirmar a conta.",
+      });
+      router.push("/login");
+    } else {
+      toast.success("Conta criada e confirmada!", {
+        description: "Redirecionando para o dashboard...",
+      });
+      router.push("/dashboard");
+    }
 
-    router.push("/login");
+    setIsLoading(false);
   };
 
   return (

@@ -14,11 +14,7 @@ import {
 
 import { BookingStatusActions } from "./booking-actions";
 
-// TODO: Pegar org_id da session
-async function getOrgId() {
-  const org = await prisma.organization.findFirst();
-  return org?.id ?? "";
-}
+import { getCurrentUserOrgId } from "@/lib/auth/dashboard";
 
 const statusConfig: Record<BookingStatus, { label: string; variant: "warning" | "success" | "destructive" | "secondary" }> = {
   PENDENTE: { label: "Pendente", variant: "warning" as const },
@@ -28,7 +24,7 @@ const statusConfig: Record<BookingStatus, { label: string; variant: "warning" | 
 };
 
 export default async function BookingsPage() {
-  const orgId = await getOrgId();
+  const orgId = await getCurrentUserOrgId();
 
   const bookings = await prisma.booking.findMany({
     where: { organizationId: orgId },

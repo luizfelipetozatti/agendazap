@@ -24,6 +24,32 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
+      toast.error("Digite seu email primeiro");
+      return;
+    }
+
+    setIsResendingEmail(true);
+    const supabase = createClient();
+    
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email,
+    });
+
+    if (error) {
+      toast.error("Erro ao reenviar email", { description: error.message });
+    } else {
+      toast.success("Email de confirmação reenviado!", { 
+        description: "Verifique sua caixa de entrada." 
+      });
+    }
+    
+    setIsResendingEmail(false);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +62,18 @@ export default function LoginPage() {
     });
 
     if (error) {
-      toast.error("Erro ao fazer login", { description: error.message });
+      // Tratamento específico para diferentes tipos de erro
+      if (error.message.includes("Email not confirmed")) {
+        toast.error("Email não confirmado", { 
+          description: "Verifique sua caixa de entrada e clique no link de confirmação, ou contate o suporte." 
+        });
+      } else if (error.message.includes("Invalid login credentials")) {
+        toast.error("Credenciais inválidas", { 
+          description: "Email ou senha incorretos. Verifique e tente novamente." 
+        });
+      } else {
+        toast.error("Erro ao fazer login", { description: error.message });
+      }
       setIsLoading(false);
       return;
     }
@@ -91,6 +128,17 @@ export default function LoginPage() {
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={isResendingEmail || !email}
+              onClick={handleResendConfirmation}
+            >
+              {isResendingEmail ? "Reenviando..." : "Reenviar Email de Confirmação"}
+            </Button>
+            
             <p className="text-center text-sm text-muted-foreground">
               Não tem conta?{" "}
               <Link

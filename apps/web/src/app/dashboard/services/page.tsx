@@ -14,14 +14,10 @@ import {
 } from "@agendazap/ui";
 import { Clock, DollarSign } from "lucide-react";
 
-// TODO: Pegar org_id da session
-async function getOrgId() {
-  const org = await prisma.organization.findFirst();
-  return org?.id ?? "";
-}
+import { getCurrentUserOrgId } from "@/lib/auth/dashboard";
 
 export default async function ServicesPage() {
-  const orgId = await getOrgId();
+  const orgId = await getCurrentUserOrgId();
 
   const services = await prisma.service.findMany({
     where: { organizationId: orgId },

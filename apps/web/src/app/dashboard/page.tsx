@@ -17,16 +17,10 @@ import {
   TrendingUp,
   DollarSign,
 } from "lucide-react";
-
-// TODO: Pegar org_id do usuário logado via session
-// Por enquanto, busca a primeira org para demo
-async function getOrgId() {
-  const org = await prisma.organization.findFirst();
-  return org?.id ?? "";
-}
+import { getCurrentUserOrgId } from "@/lib/auth/dashboard";
 
 export default async function DashboardPage() {
-  const orgId = await getOrgId();
+  const orgId = await getCurrentUserOrgId();
 
   if (!orgId) {
     return (
