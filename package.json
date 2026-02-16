@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "next": "14.2.20",
     "prettier": "^3.2.5",
     "turbo": "^2.3.0"
   },
