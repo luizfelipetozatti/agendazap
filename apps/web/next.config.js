@@ -18,8 +18,8 @@ const nextConfig = {
   output: "standalone",
   transpilePackages: ["@agendazap/ui", "@agendazap/database"],
   // Mark Prisma as external for serverless
-  serverExternalPackages: ["@prisma/client", "prisma"],
   experimental: {
+    serverComponentsExternalPackages: ["@prisma/client", "prisma"],
     // Include Prisma engines in output tracing for Vercel deployment
     outputFileTracingIncludes: isVercel
       ? {

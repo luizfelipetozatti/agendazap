@@ -15,15 +15,17 @@ export function createClient() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-          } catch {
+          } catch (error) {
             // Ignore - called from Server Component
+            console.warn("Could not set cookie:", error);
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: "", ...options });
-          } catch {
-            // Ignore
+          } catch (error) {
+            // Ignore - called from Server Component  
+            console.warn("Could not remove cookie:", error);
           }
         },
       },

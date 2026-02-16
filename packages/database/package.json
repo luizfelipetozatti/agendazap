@@ -18,10 +18,9 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "tsx src/seed.ts",
-    "build": "prisma generate && tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "type-check": "tsc --noEmit",
-    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

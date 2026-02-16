@@ -10,6 +10,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
+  PhoneInput,
 } from "@agendazap/ui";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
@@ -25,6 +26,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [orgName, setOrgName] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -69,6 +71,7 @@ export default function RegisterPage() {
           email,
           name,
           orgName,
+          whatsapp,
         }),
       });
 
@@ -130,6 +133,14 @@ export default function RegisterPage() {
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
                 required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp">WhatsApp</Label>
+              <PhoneInput
+                id="whatsapp"
+                value={whatsapp}
+                onChange={setWhatsapp}
               />
             </div>
             <div className="space-y-2">

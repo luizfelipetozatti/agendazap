@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { supabaseId, email, name, orgName } = await request.json();
+    const { supabaseId, email, name, orgName, whatsapp } = await request.json();
 
     if (!supabaseId || !email || !name || !orgName) {
       return NextResponse.json(
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
     // Criar user, org e membership em transação
     const result = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
+      const user = await (tx as any).user.create({
         data: {
           email,
           name,
@@ -39,14 +39,15 @@ export async function POST(request: Request) {
         },
       });
 
-      const org = await tx.organization.create({
+      const org = await (tx as any).organization.create({
         data: {
           name: orgName,
           slug: finalSlug,
+          whatsappNumber: whatsapp || null,
         },
       });
 
-      await tx.organizationMember.create({
+      await (tx as any).organizationMember.create({
         data: {
           userId: user.id,
           organizationId: org.id,

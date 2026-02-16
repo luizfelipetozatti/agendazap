@@ -30,5 +30,8 @@ export type { BadgeProps } from "./components/badge";
 
 export { Spinner } from "./components/spinner";
 
+export { PhoneInput, COUNTRIES } from "./components/phone-input";
+export type { PhoneInputProps, Country } from "./components/phone-input";
+
 // Utils
 export { cn } from "./lib/utils";
