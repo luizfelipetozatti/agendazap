@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm --filter @agendazap/database db:generate && next build",
+    "build": "pnpm --filter @agendazap/database db:generate && next build && node scripts/copy-prisma.js",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
