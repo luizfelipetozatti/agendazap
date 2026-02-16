@@ -5,14 +5,9 @@
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 10
-    },
-    "app/dashboard/**/*.tsx": {  
-      "maxDuration": 10
     }
   },
   "env": {
-    "PRISMA_GENERATE_DATAPROXY": "false",
     "SKIP_ENV_VALIDATION": "true"
-  },
-  "crons": []
+  }
 }
