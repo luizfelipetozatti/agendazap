@@ -43,21 +43,21 @@ enum OrganizationStatus {
 // ============================================================
 
 model Organization {
-  id                  String              @id @default(uuid()) @db.Uuid
+  id                  String             @id @default(uuid()) @db.Uuid
   name                String
-  slug                String              @unique
-  whatsappNumber      String?             @map("whatsapp_number")
-  apiKeyWhatsapp      String?             @map("api_key_whatsapp")
-  evolutionInstance   String?             @map("evolution_instance")
-  logoUrl             String?             @map("logo_url")
-  timezone            String              @default("America/Sao_Paulo")
-  status              OrganizationStatus  @default(ACTIVE)
-  deletedAt           DateTime?           @map("deleted_at")
-  deletedBy           String?             @map("deleted_by") @db.Uuid
-  reactivationToken   String?             @unique @map("reactivation_token")
-  reactivationExpires DateTime?           @map("reactivation_expires")
-  createdAt           DateTime            @default(now()) @map("created_at")
-  updatedAt           DateTime            @updatedAt @map("updated_at")
+  slug                String             @unique
+  whatsappNumber      String?            @map("whatsapp_number")
+  apiKeyWhatsapp      String?            @map("api_key_whatsapp")
+  evolutionInstance   String?            @map("evolution_instance")
+  logoUrl             String?            @map("logo_url")
+  timezone            String             @default("America/Sao_Paulo")
+  status              OrganizationStatus @default(ACTIVE)
+  deletedAt           DateTime?          @map("deleted_at")
+  deletedBy           String?            @map("deleted_by") @db.Uuid
+  reactivationToken   String?            @unique @map("reactivation_token")
+  reactivationExpires DateTime?          @map("reactivation_expires")
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
 
   // Relations
   members  OrganizationMember[]
@@ -72,13 +72,13 @@ model Organization {
 // ============================================================
 
 model User {
-  id            String   @id @default(uuid()) @db.Uuid
-  email         String   @unique
-  name          String?
-  avatarUrl     String?  @map("avatar_url")
-  supabaseId    String?  @unique @map("supabase_id")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(uuid()) @db.Uuid
+  email      String   @unique
+  name       String?
+  avatarUrl  String?  @map("avatar_url")
+  supabaseId String?  @unique @map("supabase_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   // Relations
   memberships OrganizationMember[]
@@ -87,11 +87,11 @@ model User {
 }
 
 model OrganizationMember {
-  id             String       @id @default(uuid()) @db.Uuid
-  userId         String       @map("user_id") @db.Uuid
-  organizationId String       @map("organization_id") @db.Uuid
-  role           UserRole     @default(MEMBER)
-  createdAt      DateTime     @default(now()) @map("created_at")
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @map("user_id") @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  role           UserRole @default(MEMBER)
+  createdAt      DateTime @default(now()) @map("created_at")
 
   // Relations
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -129,19 +129,19 @@ model Service {
 // ============================================================
 
 model Booking {
-  id              String        @id @default(uuid()) @db.Uuid
-  organizationId  String        @map("organization_id") @db.Uuid
-  serviceId       String        @map("service_id") @db.Uuid
-  clientName      String        @map("cliente_nome")
-  clientPhone     String        @map("cliente_phone")
-  clientEmail     String?       @map("cliente_email")
-  startTime       DateTime      @map("start_time")
-  endTime         DateTime      @map("end_time")
-  status          BookingStatus @default(PENDENTE)
-  notes           String?
-  whatsappSent    Boolean       @default(false) @map("whatsapp_sent")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String        @map("organization_id") @db.Uuid
+  serviceId      String        @map("service_id") @db.Uuid
+  clientName     String        @map("cliente_nome")
+  clientPhone    String        @map("cliente_phone")
+  clientEmail    String?       @map("cliente_email")
+  startTime      DateTime      @map("start_time")
+  endTime        DateTime      @map("end_time")
+  status         BookingStatus @default(PENDENTE)
+  notes          String?
+  whatsappSent   Boolean       @default(false) @map("whatsapp_sent")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
 
   // Relations
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
