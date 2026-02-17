@@ -48,6 +48,20 @@ function SetupForm() {
 
   useEffect(() => {
     const loadUser = async () => {
+      // Verificar se acabou de registrar (evitar duplicata por race condition)
+      const justRegistered = sessionStorage.getItem("just_registered");
+      const registeredAt = parseInt(sessionStorage.getItem("registered_at") || "0");
+      const now = Date.now();
+      
+      // Se foi registrado há menos de 10 segundos, redirecionar para dashboard
+      if (justRegistered === "true" && now - registeredAt < 10000) {
+        console.log("[Setup] User just registered, redirecting to dashboard...");
+        sessionStorage.removeItem("just_registered");
+        sessionStorage.removeItem("registered_at");
+        router.push("/dashboard");
+        return;
+      }
+      
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
 
@@ -91,7 +105,22 @@ function SetupForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Erro ao configurar conta");
+        // Verificar se é uma organização deletada
+        if (data.error === "ORGANIZATION_DELETED") {
+          const confirmReactivation = window.confirm(
+            `${data.message}\n\nSerá necessário solicitar a reativação através do seu email.`
+          );
+          
+          if (confirmReactivation) {
+            router.push("/request-reactivation");
+            return;
+          } else {
+            setIsLoading(false);
+            return;
+          }
+        }
+        
+        throw new Error(data.message || data.error || "Erro ao configurar conta");
       }
 
       toast.success("Conta configurada com sucesso!");

@@ -30,6 +30,23 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen">
+      {/* Script para limpar flag de registro após carregar */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            if (typeof window !== 'undefined' && sessionStorage.getItem('just_registered') === 'true') {
+              const registeredAt = parseInt(sessionStorage.getItem('registered_at') || '0');
+              const now = Date.now();
+              // Manter flag por até 10 segundos
+              if (now - registeredAt > 10000) {
+                sessionStorage.removeItem('just_registered');
+                sessionStorage.removeItem('registered_at');
+              }
+            }
+          `,
+        }}
+      />
+      
       {/* Sidebar */}
       <aside className="hidden w-64 border-r bg-card lg:block">
         <div className="flex h-full flex-col">

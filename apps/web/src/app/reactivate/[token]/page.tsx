@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, Spinner } from "@agendazap/ui";
 import { reactivateOrganization } from "@/app/actions/organization";
@@ -12,8 +12,16 @@ function ReactivateContent() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState<{ success: boolean; message?: string; error?: string; organizationSlug?: string } | null>(null);
+  
+  // Prevenir execução duplicada do useEffect (React 18 Strict Mode)
+  const hasActivated = useRef(false);
 
   useEffect(() => {
+    // Se já executou, não executar novamente
+    if (hasActivated.current) {
+      return;
+    }
+    
     if (!token) {
       setResult({
         success: false,
@@ -24,17 +32,21 @@ function ReactivateContent() {
     }
 
     const activate = async () => {
+      // Marcar como executado ANTES da chamada para prevenir race conditions
+      hasActivated.current = true;
+      
       try {
         const response = await reactivateOrganization(token);
         setResult(response);
         
         if (response.success && response.organizationSlug) {
-          // Redirecionar para login após 3 segundos
+          // Redirecionar para login após 2 segundos
           setTimeout(() => {
-            router.push("/login?message=organization-reactivated");
-          }, 3000);
+            window.location.href = "/login?message=organization-reactivated";
+          }, 2000);
         }
       } catch (err) {
+        console.error("Erro ao reativar:", err);
         setResult({
           success: false,
           message: "Erro inesperado ao reativar organização",

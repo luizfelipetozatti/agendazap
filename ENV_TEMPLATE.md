@@ -62,3 +62,14 @@ NODE_ENV=development
 
 # Timezone padrão das organizações
 # TZ=America/Sao_Paulo
+
+# ============================================================
+# EMAIL (Configuração no Supabase, não aqui!)
+# ============================================================
+# Envio de emails de confirmação é configurado no painel do Supabase:
+# https://app.supabase.com → Settings → Auth → SMTP Settings
+#
+# Veja EMAIL_SETUP.md para instruções detalhadas sobre:
+# - Como desabilitar confirmação de email (dev)
+# - Como configurar SMTP com Gmail
+# - Como usar Resend, SendGrid, etc.

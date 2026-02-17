@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input, Label } from "@agendazap/ui";
 import { deactivateOrganization } from "@/app/actions/organization";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // Importar Button com tipo específico
 import { Button, type ButtonProps } from "@agendazap/ui";
@@ -32,14 +33,27 @@ export function DeleteOrganizationDialog({
       const result = await deactivateOrganization(confirmationText);
 
       if (result.success) {
-        // Redirecionar para a página de login após exclusão
-        router.push("/login?message=organization-deleted");
+        // Mostrar mensagem de sucesso
+        toast.success("Organização desativada", {
+          description: "Sua organização foi desativada com sucesso. Para reativar, solicite um link de reativação.",
+          duration: 3000,
+        });
+        
+        // Fechar o diálogo
+        onOpenChange(false);
+        
+        // Aguardar um pouco para o toast aparecer
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Hard redirect para limpar cache e sessão
+        window.location.href = "/login?message=organization-deleted";
       } else {
         setError(result.error || "Erro ao excluir organização");
+        setIsDeleting(false);
       }
     } catch (err) {
+      console.error("Erro ao desativar organização:", err);
       setError("Erro inesperado. Tente novamente.");
-    } finally {
       setIsDeleting(false);
     }
   };

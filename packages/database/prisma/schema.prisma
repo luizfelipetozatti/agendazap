@@ -44,8 +44,8 @@ enum OrganizationStatus {
 
 model Organization {
   id                  String             @id @default(uuid()) @db.Uuid
-  name                String
-  slug                String             @unique
+  name                String             // Unique parcial via migration: apenas ACTIVE
+  slug                String             // Unique parcial via migration: apenas ACTIVE
   whatsappNumber      String?            @map("whatsapp_number")
   apiKeyWhatsapp      String?            @map("api_key_whatsapp")
   evolutionInstance   String?            @map("evolution_instance")

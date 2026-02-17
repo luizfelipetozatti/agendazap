@@ -1,5 +1,6 @@
 import { prisma, UserRole } from "@agendazap/database";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
   try {
@@ -20,9 +21,35 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
-    // Verificar duplicata de slug
-    const existingOrg = await prisma.organization.findUnique({
-      where: { slug },
+    // Verificar se existe organização deletada ou pendente de reativação com o mesmo nome
+    const inactiveOrg = await prisma.organization.findFirst({
+      where: {
+        name: orgName,
+        status: { in: ["DELETED", "PENDING_REACTIVATION"] },
+      },
+    });
+
+    if (inactiveOrg) {
+      const statusMessage = inactiveOrg.status === "PENDING_REACTIVATION" 
+        ? "Já existe uma organização com este nome aguardando reativação. Verifique seu email ou solicite um novo link."
+        : "Já existe uma organização com este nome que foi desativada. Entre em contato para reativá-la.";
+      
+      return NextResponse.json(
+        { 
+          error: "ORGANIZATION_DELETED",
+          message: statusMessage,
+          organizationName: inactiveOrg.name,
+        },
+        { status: 409 }
+      );
+    }
+
+    // Verificar duplicata de slug para organizações ativas
+    const existingOrg = await prisma.organization.findFirst({
+      where: { 
+        slug,
+        status: "ACTIVE",
+      },
     });
 
     const finalSlug = existingOrg
@@ -64,13 +91,40 @@ export async function POST(request: Request) {
       return { user, org };
     });
 
+    // Revalidar cache do dashboard
+    revalidatePath("/dashboard");
+
     return NextResponse.json({
       userId: result.user.id,
       organizationId: result.org.id,
       slug: result.org.slug,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("[Auth Setup] Error:", error);
+    
+    // Tratar erro de constraint unique do Prisma
+    if (error.code === "P2002") {
+      const target = error.meta?.target;
+      if (target?.includes("name")) {
+        return NextResponse.json(
+          { 
+            error: "ORGANIZATION_EXISTS",
+            message: "Já existe uma organização ativa com este nome. Escolha outro nome.",
+          },
+          { status: 409 }
+        );
+      }
+      if (target?.includes("slug")) {
+        return NextResponse.json(
+          { 
+            error: "SLUG_EXISTS",
+            message: "Este nome gera um identificador já utilizado. Tente um nome diferente.",
+          },
+          { status: 409 }
+        );
+      }
+    }
+    
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

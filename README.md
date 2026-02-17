@@ -56,3 +56,10 @@ EVOLUTION_API_KEY=...
 NEXTAUTH_SECRET=...
 NEXTAUTH_URL=http://localhost:3000
 ```
+
+## 📚 Documentação Adicional
+
+- **[EMAIL_SETUP.md](EMAIL_SETUP.md)** - Configuração de envio de emails (SMTP, Gmail, Resend)
+- **[SETUP.md](SETUP.md)** - Guia completo de instalação e configuração
+- **[WHATSAPP_GUIDE.md](WHATSAPP_GUIDE.md)** - Integração com Evolution API
+- **[VERCEL_DEPLOY.md](VERCEL_DEPLOY.md)** - Deploy na Vercel

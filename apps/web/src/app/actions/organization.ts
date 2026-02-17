@@ -30,44 +30,41 @@ const updateOrganizationSchema = z.object({
 });
 
 async function getCurrentUserOrgId(): Promise<string> {
-  try {
-    const supabase = createClient();
-    
-    const { data: { user }, error } = await supabase.auth.getUser();
-    
-    if (error || !user) {
-      redirect("/login");
-    }
+  const supabase = createClient();
+  
+  const { data: { user }, error } = await supabase.auth.getUser();
+  
+  if (error || !user) {
+    redirect("/login");
+  }
 
-    // Busca o usuário no banco pelo supabaseId
-    const dbUser = await prisma.user.findUnique({
-      where: { supabaseId: user.id },
-      include: {
-        memberships: {
-          take: 1,
-          include: {
-            organization: true,
-          },
+  // Busca o usuário no banco pelo supabaseId
+  const dbUser = await prisma.user.findUnique({
+    where: { supabaseId: user.id },
+    include: {
+      memberships: {
+        where: {
+          organization: {
+            status: "ACTIVE"
+          }
+        },
+        take: 1,
+        include: {
+          organization: true,
         },
       },
-    });
+    },
+  });
 
-    if (!dbUser) {
-      throw new Error("Usuário não encontrado no banco de dados");
-    }
-
-    if (dbUser.memberships.length === 0) {
-      throw new Error("Usuário não pertence a nenhuma organização");
-    }
-
-    return dbUser.memberships[0].organizationId;
-  } catch (error) {
-    if (error instanceof Error && error.message.includes("Usuário não encontrado")) {
-      throw error;
-    }
-    console.error("Erro ao obter organização do usuário:", error);
-    throw new Error("Não foi possível obter a organização");
+  if (!dbUser) {
+    redirect("/login?reason=user-not-found");
   }
+
+  if (dbUser.memberships.length === 0) {
+    redirect("/setup?reason=no-organization");
+  }
+
+  return dbUser.memberships[0].organizationId;
 }
 
 export async function updateOrganization(formData: FormData) {
@@ -159,8 +156,6 @@ export async function updateOrganization(formData: FormData) {
  */
 export async function deactivateOrganization(confirmationText: string) {
   try {
-    const orgId = await getCurrentUserOrgId();
-    
     // Validar texto de confirmação
     if (confirmationText !== "EXCLUIR PERMANENTEMENTE") {
       return {
@@ -182,15 +177,29 @@ export async function deactivateOrganization(confirmationText: string) {
 
     const dbUser = await prisma.user.findUnique({
       where: { supabaseId: user.id },
-      select: { id: true }
+      include: {
+        memberships: {
+          where: {
+            organization: {
+              status: "ACTIVE"
+            },
+            role: "OWNER"
+          },
+          include: {
+            organization: true
+          }
+        }
+      }
     });
 
-    if (!dbUser) {
+    if (!dbUser || dbUser.memberships.length === 0) {
       return {
         success: false,
-        error: "Usuário não encontrado",
+        error: "Organização não encontrada ou você não tem permissão",
       };
     }
+
+    const orgId = dbUser.memberships[0].organizationId;
 
     // Desativar a organização
     await prisma.organization.update({
@@ -232,9 +241,10 @@ export async function deactivateOrganization(confirmationText: string) {
  */
 export async function requestReactivation(email: string) {
   try {
+    // Buscar organização deletada ou já pendente de reativação
     const organization = await prisma.organization.findFirst({
       where: {
-        status: "DELETED",
+        status: { in: ["DELETED", "PENDING_REACTIVATION"] },
         members: {
           some: {
             user: {
@@ -276,6 +286,7 @@ export async function requestReactivation(email: string) {
     const reactivationExpires = new Date();
     reactivationExpires.setHours(reactivationExpires.getHours() + 24); // 24 horas
 
+    // Atualizar organização (ou renovar token se já estava pendente)
     await prisma.organization.update({
       where: { id: organization.id },
       data: {
@@ -285,9 +296,9 @@ export async function requestReactivation(email: string) {
       },
     });
 
-    // TODO: Integrar com serviço de email para enviar link de confirmação
-    // Por enquanto, retornar o token (em produção, apenas enviar email)
-    const reactivationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reactivate/${reactivationToken}`;
+    // URL base: usa env ou fallback para localhost
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const reactivationUrl = `${baseUrl}/reactivate/${reactivationToken}`;
     
     console.log("URL de reativação:", reactivationUrl);
 
