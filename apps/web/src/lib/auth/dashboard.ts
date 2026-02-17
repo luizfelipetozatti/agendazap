@@ -21,6 +21,11 @@ export async function getCurrentUserOrgId(): Promise<string> {
     where: { supabaseId: user.id },
     include: {
       memberships: {
+        where: {
+          organization: {
+            status: "ACTIVE" // Apenas organizações ativas
+          }
+        },
         include: {
           organization: true
         }
@@ -29,11 +34,14 @@ export async function getCurrentUserOrgId(): Promise<string> {
   });
 
   if (!dbUser) {
-    throw new Error("Usuário não encontrado no sistema");
+    // Usuário autenticado no Supabase mas não criado no banco
+    // Redirecionar para página de setup
+    redirect("/setup");
   }
 
   if (dbUser.memberships.length === 0) {
-    throw new Error("Usuário não está associado a nenhuma organização");
+    // Usuário existe mas não tem organização ativa
+    redirect("/setup?reason=no-organization");
   }
 
   // Retorna o ID da primeira organização do usuário
@@ -57,6 +65,11 @@ export async function getCurrentUser() {
     where: { supabaseId: user.id },
     include: {
       memberships: {
+        where: {
+          organization: {
+            status: "ACTIVE" // Apenas organizações ativas
+          }
+        },
         include: {
           organization: true
         }
@@ -65,7 +78,7 @@ export async function getCurrentUser() {
   });
 
   if (!dbUser) {
-    throw new Error("Usuário não encontrado no sistema");
+    redirect("/setup");
   }
 
   return {

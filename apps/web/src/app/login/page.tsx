@@ -13,18 +13,32 @@ import {
 } from "@agendazap/ui";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isResendingEmail, setIsResendingEmail] = useState(false);
+
+  useEffect(() => {
+    const message = searchParams.get("message");
+    if (message === "organization-deleted") {
+      toast.info("Organização desativada", {
+        description: "Sua organização foi desativada com sucesso. Para reativar, solicite um link de reativação.",
+      });
+    } else if (message === "organization-reactivated") {
+      toast.success("Organização reativada!", {
+        description: "Sua organização foi reativada com sucesso. Faça login para acessar.",
+      });
+    }
+  }, [searchParams]);
 
   const handleResendConfirmation = async () => {
     if (!email) {
@@ -146,6 +160,16 @@ export default function LoginPage() {
                 className="font-medium text-primary hover:underline"
               >
                 Criar conta grátis
+              </Link>
+            </p>
+            
+            <p className="text-center text-sm text-muted-foreground">
+              Organização desativada?{" "}
+              <Link
+                href="/request-reactivation"
+                className="font-medium text-primary hover:underline"
+              >
+                Solicitar reativação
               </Link>
             </p>
           </CardFooter>

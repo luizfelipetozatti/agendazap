@@ -29,10 +29,16 @@ export async function POST(request: Request) {
       ? `${slug}-${Date.now().toString(36)}`
       : slug;
 
-    // Criar user, org e membership em transação
+    // Criar ou buscar user, criar org e membership em transação
     const result = await prisma.$transaction(async (tx) => {
-      const user = await (tx as any).user.create({
-        data: {
+      // Usar upsert para criar ou atualizar o usuário
+      const user = await (tx as any).user.upsert({
+        where: { email },
+        update: {
+          name,
+          supabaseId,
+        },
+        create: {
           email,
           name,
           supabaseId,

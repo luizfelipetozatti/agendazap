@@ -5,10 +5,10 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  Button,
 } from "@agendazap/ui";
 import { getCurrentUserOrgId } from "@/lib/auth/dashboard";
 import { OrganizationForm } from "./organization-form";
+import { DeleteOrganizationButton } from "./delete-organization-button";
 
 // Force dynamic rendering (no static generation at build time)
 export const dynamic = 'force-dynamic';
@@ -49,7 +49,7 @@ export default async function SettingsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="destructive">Excluir Organização</Button>
+          <DeleteOrganizationButton organizationName={org.name} />
         </CardContent>
       </Card>
     </div>

@@ -32,21 +32,32 @@ enum UserRole {
   MEMBER
 }
 
+enum OrganizationStatus {
+  ACTIVE
+  DELETED
+  PENDING_REACTIVATION
+}
+
 // ============================================================
 // MULTI-TENANCY: Organizations
 // ============================================================
 
 model Organization {
-  id               String   @id @default(uuid()) @db.Uuid
-  name             String
-  slug             String   @unique
-  whatsappNumber   String?  @map("whatsapp_number")
-  apiKeyWhatsapp   String?  @map("api_key_whatsapp")
-  evolutionInstance String?  @map("evolution_instance")
-  logoUrl          String?  @map("logo_url")
-  timezone         String   @default("America/Sao_Paulo")
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id                  String              @id @default(uuid()) @db.Uuid
+  name                String
+  slug                String              @unique
+  whatsappNumber      String?             @map("whatsapp_number")
+  apiKeyWhatsapp      String?             @map("api_key_whatsapp")
+  evolutionInstance   String?             @map("evolution_instance")
+  logoUrl             String?             @map("logo_url")
+  timezone            String              @default("America/Sao_Paulo")
+  status              OrganizationStatus  @default(ACTIVE)
+  deletedAt           DateTime?           @map("deleted_at")
+  deletedBy           String?             @map("deleted_by") @db.Uuid
+  reactivationToken   String?             @unique @map("reactivation_token")
+  reactivationExpires DateTime?           @map("reactivation_expires")
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
 
   // Relations
   members  OrganizationMember[]
