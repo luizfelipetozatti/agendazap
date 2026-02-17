@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Button,
@@ -16,10 +16,22 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
-export default function SetupPage() {
-  const router = useRouter();
+// Componente que usa searchParams - precisa estar em Suspense
+function SetupDescription() {
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason");
+
+  return (
+    <CardDescription>
+      {reason === "no-organization"
+        ? "Você não tem nenhuma organização ativa. Crie uma para continuar."
+        : "Configure sua conta e crie sua primeira organização"}
+    </CardDescription>
+  );
+}
+
+function SetupForm() {
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState<{
@@ -108,11 +120,9 @@ export default function SetupPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Complete seu Cadastro</CardTitle>
-          <CardDescription>
-            {reason === "no-organization"
-              ? "Você não tem nenhuma organização ativa. Crie uma para continuar."
-              : "Configure sua conta e crie sua primeira organização"}
-          </CardDescription>
+          <Suspense fallback={<CardDescription>Carregando...</CardDescription>}>
+            <SetupDescription />
+          </Suspense>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -178,4 +188,8 @@ export default function SetupPage() {
       </Card>
     </div>
   );
+}
+
+export default function SetupPage() {
+  return <SetupForm />;
 }

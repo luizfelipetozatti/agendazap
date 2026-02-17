@@ -14,18 +14,14 @@ import {
 import { Calendar } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { toast } from "sonner";
 
 import { createClient } from "@/lib/supabase/client";
 
-export default function LoginPage() {
-  const router = useRouter();
+// Componente que lida com os search params - precisa estar em Suspense
+function LoginMessages() {
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResendingEmail, setIsResendingEmail] = useState(false);
 
   useEffect(() => {
     const message = searchParams.get("message");
@@ -39,6 +35,17 @@ export default function LoginPage() {
       });
     }
   }, [searchParams]);
+
+  return null;
+}
+
+// Componente principal de login
+function LoginForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
 
   const handleResendConfirmation = async () => {
     if (!email) {
@@ -176,5 +183,17 @@ export default function LoginPage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+// Componente wrapper com Suspense
+export default function LoginPage() {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <LoginMessages />
+      </Suspense>
+      <LoginForm />
+    </>
   );
 }

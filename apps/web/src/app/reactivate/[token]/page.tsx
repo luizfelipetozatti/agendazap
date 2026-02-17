@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, Spinner } from "@agendazap/ui";
 import { reactivateOrganization } from "@/app/actions/organization";
 
-export default function ReactivatePage() {
+function ReactivateContent() {
   const params = useParams();
   const router = useRouter();
   const token = params?.token as string;
@@ -118,5 +118,17 @@ export default function ReactivatePage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function ReactivatePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <Spinner />
+      </div>
+    }>
+      <ReactivateContent />
+    </Suspense>
   );
 }
