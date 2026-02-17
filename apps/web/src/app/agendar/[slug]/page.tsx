@@ -11,8 +11,11 @@ interface BookingPageProps {
 }
 
 export async function generateMetadata({ params }: BookingPageProps) {
-  const org = await prisma.organization.findUnique({
-    where: { slug: params.slug },
+  const org = await prisma.organization.findFirst({
+    where: { 
+      slug: params.slug,
+      status: "ACTIVE",
+    },
   });
 
   if (!org) return { title: "Não encontrado" };
@@ -24,8 +27,11 @@ export async function generateMetadata({ params }: BookingPageProps) {
 }
 
 export default async function BookingPage({ params }: BookingPageProps) {
-  const org = await prisma.organization.findUnique({
-    where: { slug: params.slug },
+  const org = await prisma.organization.findFirst({
+    where: { 
+      slug: params.slug,
+      status: "ACTIVE",
+    },
     include: {
       services: {
         where: { active: true },

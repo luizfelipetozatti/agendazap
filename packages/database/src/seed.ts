@@ -7,17 +7,24 @@ const supabase = createSupabaseAdmin();
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // Criar organização de exemplo (upsert para evitar duplicação)
-  const org = await prisma.organization.upsert({
-    where: { slug: "clinica-exemplo" },
-    update: {},
-    create: {
-      name: "Clínica Exemplo",
+  // Criar organização de exemplo
+  let org = await prisma.organization.findFirst({
+    where: { 
       slug: "clinica-exemplo",
-      whatsappNumber: "5511999999999",
-      timezone: "America/Sao_Paulo",
+      status: "ACTIVE",
     },
   });
+  
+  if (!org) {
+    org = await prisma.organization.create({
+      data: {
+        name: "Clínica Exemplo",
+        slug: "clinica-exemplo",
+        whatsappNumber: "5511999999999",
+        timezone: "America/Sao_Paulo",
+      },
+    });
+  }
 
   console.log(`✅ Organization: ${org.name} (${org.id})`);
 
@@ -120,17 +127,24 @@ async function main() {
     console.log(`✅ Services already exist (${existingServices.length} found)`);
   }
 
-  // Criar organização coworking (upsert)
-  const coworking = await prisma.organization.upsert({
-    where: { slug: "cowork-hub" },
-    update: {},
-    create: {
-      name: "CoWork Hub",
+  // Criar organização coworking
+  let coworking = await prisma.organization.findFirst({
+    where: { 
       slug: "cowork-hub",
-      whatsappNumber: "5511888888888",
-      timezone: "America/Sao_Paulo",
+      status: "ACTIVE",
     },
   });
+  
+  if (!coworking) {
+    coworking = await prisma.organization.create({
+      data: {
+        name: "CoWork Hub",
+        slug: "cowork-hub",
+        whatsappNumber: "5511888888888",
+        timezone: "America/Sao_Paulo",
+      },
+    });
+  }
 
   const existingCoworkServices = await prisma.service.findMany({
     where: { organizationId: coworking.id },
