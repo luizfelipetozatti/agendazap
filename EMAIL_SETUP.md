@@ -102,7 +102,32 @@ Após configurar o SMTP:
 
 ---
 
-## 🐛 Troubleshooting
+## � Emails de Reativação de Organização
+
+AgendaZap envia emails de reativação quando uma organização é desativada. Estes emails são enviados via **Resend** ou necessitam de configuração adicional.
+
+### Opção 1: Usar Resend (Recomendado para Reativação)
+
+1. Crie uma conta em [Resend](https://resend.com)
+2. Obtenha sua API Key: https://resend.com/api-keys
+3. Configure em `apps/web/.env.local`:
+   ```
+   RESEND_API_KEY=re_sua-api-key-aqui
+   RESEND_FROM_EMAIL=noreply@seu-dominio.com
+   ```
+4. Teste solicitando reativação em `/request-reactivation`
+
+### Opção 2: Usar SMTP Customizado
+
+Se preferir usar o SMTP já configurado no Supabase:
+
+1. A rota `/api/auth/send-reactivation-email` tentará usar Resend
+2. Se não tiver Resend, os emails serão registrados em logs
+3. Para ativar envio real, implemente a integração com seu serviço SMTP preferido
+
+---
+
+## �🐛 Troubleshooting
 
 ### Erro: "Error sending confirmation email"
 - ✅ Verifique se o SMTP está habilitado

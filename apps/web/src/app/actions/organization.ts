@@ -302,6 +302,42 @@ export async function requestReactivation(email: string) {
     
     console.log("URL de reativação:", reactivationUrl);
 
+    // Enviar email de reativação
+    try {
+      const sendEmailResponse = await fetch("/api/auth/send-reactivation-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.toLowerCase(),
+          organizationName: organization.name,
+          reactivationUrl,
+        }),
+      });
+
+      if (!sendEmailResponse.ok) {
+        const errorData = await sendEmailResponse.json();
+        console.error("Erro ao enviar email de reativação:", errorData);
+        
+        // Se falhar em produção, retornar erro
+        if (process.env.NODE_ENV === "production") {
+          return {
+            success: false,
+            error: "Erro ao enviar email de reativação. Tente novamente.",
+          };
+        }
+      }
+    } catch (emailError) {
+      console.error("Erro ao chamar API de email:", emailError);
+      
+      // Em produção, retornar erro; em desenvolvimento, continuar
+      if (process.env.NODE_ENV === "production") {
+        return {
+          success: false,
+          error: "Erro ao enviar email. Verifique sua configuração de SMTP.",
+        };
+      }
+    }
+
     return {
       success: true,
       message: "Link de reativação enviado para seu email",

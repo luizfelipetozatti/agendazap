@@ -64,12 +64,17 @@ NODE_ENV=development
 # TZ=America/Sao_Paulo
 
 # ============================================================
-# EMAIL (Configuração no Supabase, não aqui!)
+# EMAIL (Para reativação de organização)
 # ============================================================
-# Envio de emails de confirmação é configurado no painel do Supabase:
-# https://app.supabase.com → Settings → Auth → SMTP Settings
-#
-# Veja EMAIL_SETUP.md para instruções detalhadas sobre:
-# - Como desabilitar confirmação de email (dev)
-# - Como configurar SMTP com Gmail
-# - Como usar Resend, SendGrid, etc.
+# OPÇÃO 1: Usar Resend (Recomendado)
+# 1. Crie conta em https://resend.com
+# 2. Obtenha sua API Key em https://resend.com/api-keys
+# Remova o # para ativar:
+# RESEND_API_KEY=re_xxx...
+# RESEND_FROM_EMAIL=noreply@seu-dominio.com
+
+# OPÇÃO 2: Usar SMTP do Supabase (para confirmação de account)
+# Configure no painel: https://app.supabase.com → Settings → Auth → SMTP Settings
+# Veja EMAIL_SETUP.md para instruções detalhadas
+
+
